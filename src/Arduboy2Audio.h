@@ -8,7 +8,7 @@
 #define ARDUBOY2_AUDIO_H
 
 #include <Arduino.h>
-//#include <EEPROM.h>
+#include <EEPROM.h>
 
 /** \brief
  * Provide speaker and sound control.
@@ -28,7 +28,7 @@
  *
  * Example:
  *
- * \code
+ * \code{.cpp}
  * #include <Arduboy2.h>
  *
  * Arduboy2 arduboy;
@@ -52,7 +52,7 @@
  * `enabled()` type function to be passed as a parameter in the constructor,
  * like so:
  *
- * \code
+ * \code{.cpp}
  * #include <Arduboy2.h>
  * #include <ArduboyTones.h>
  *
@@ -80,12 +80,9 @@ class Arduboy2Audio
    *
    * \details
    * The speaker is initialized based on the current mute setting saved in
-   * system EEPROM. This function is called by `Arduboy2Base::begin()` so it
-   * isn't normally required to call it within a sketch. However, if
-   * `Arduboy2Core::boot()` is used instead of `Arduboy2Base::begin()` and the
-   * sketch includes sound, then this function should be called after `boot()`.
-   */
-  void static begin();
+   * system EEPROM.
+  */
+  static void begin();
 
   /** \brief
    * Turn sound on.
@@ -95,9 +92,9 @@ class Arduboy2Audio
    * mode only until the unit is powered off. To save the current mode use
    * `saveOnOff()`.
    *
-   * \see off() saveOnOff()
+   * \see off() toggle() saveOnOff()
    */
-  void static on();
+  static void on();
 
   /** \brief
    * Turn sound off (mute).
@@ -107,9 +104,22 @@ class Arduboy2Audio
    * the sound mode only until the unit is powered off. To save the current
    * mode use `saveOnOff()`.
    *
-   * \see on() saveOnOff()
+   * \see on() toggle() saveOnOff()
    */
-  void static off();
+  static void off();
+
+  /** \brief
+   * Toggle the sound on/off state.
+   *
+   * \details
+   * If the system is configured for sound on, it will be changed to sound off
+   * (mute). If sound is off, it will be changed to on. This function sets
+   * the sound mode only until the unit is powered off. To save the current
+   * mode use `saveOnOff()`.
+   *
+   * \see on() off() saveOnOff()
+   */
+  static void toggle();
 
   /** \brief
    * Save the current sound state in EEPROM.
@@ -123,9 +133,9 @@ class Arduboy2Audio
    * EEPROM is limited in the number of times it can be written to. Sketches
    * should not continuously change and then save the state rapidly.
    *
-   * \see on() off()
+   * \see on() off() toggle()
    */
-  void static saveOnOff();
+  static void saveOnOff();
 
   /** \brief
    * Get the current sound state.
@@ -137,12 +147,12 @@ class Arduboy2Audio
    * If `true` is returned, sound can be produced. If `false` is returned,
    * sound should be muted.
    *
-   * \see on() off()
+   * \see on() off() toggle()
    */
-  bool static enabled();
+  static bool enabled();
 
  protected:
-  bool static audio_enabled;
+  static bool audio_enabled;
 };
 
 #endif
